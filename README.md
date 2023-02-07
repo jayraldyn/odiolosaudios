@@ -7,7 +7,7 @@ Serverless lambda in AWS to create a Telegram bot to transcribe audios
 
 You should take a look at the settings in serverless.yml, keep in mind that it's designed for my needs, not necessarily yours. For instance, see if the AWS region suits you.
 
-Then, take a look ar the Python handler, you'll see that it's designed to allow only the users in **permitidos**. I did that to prevent unexpected bills from AWS. You should change this to include your username or whoever you like. You could also remove that control by removing the **@check_permitido** decorator.
+Then, take a look at the Python handler, you'll see that it's designed to allow only the users in **permitidos**. I did that to prevent unexpected bills from AWS. You should change this to include your username or whoever you like. You could also remove that control by removing the **@check_permitido** decorator.
 
 ### First, create a bot in Telegram
 
