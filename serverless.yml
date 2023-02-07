@@ -1,0 +1,59 @@
+service: odiolosaudios
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '3'
+
+resources:
+  Resources:
+    UploadBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: telegram-bot-audios
+        AccessControl: Private
+        CorsConfiguration:
+          CorsRules:
+          - AllowedMethods:
+            - GET
+            - PUT
+            - POST
+            - HEAD
+            AllowedOrigins:
+            - "*"
+            AllowedHeaders:
+            - "*"
+provider:
+  name: aws
+  runtime: python3.8
+  stage: pro
+  region: eu-west-1
+  timeout: 30
+
+  environment:
+    TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+       - "s3:*"
+      Resource: { "Fn::Join": ["", ["arn:aws:s3:::telegram-bot-audios", "/*" ] ] }
+    - Effect: "Allow"
+      Action:
+        - ssm:GetParameter
+        - ssm:PutParameter
+      Resource: "arn:aws:ssm:*:*:parameter/*"
+
+functions:
+  post:
+    handler: odiolosaudios.telegram_bot
+    events:
+      - http:
+          path: odiolosaudios
+          method: post
+          cors: true
+    layers:
+      - {Ref: FfmpegLambdaLayer}
+
+layers:
+  ffmpeg:
+    path: layer
